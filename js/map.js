@@ -84,8 +84,7 @@ var offerParams = {
  * @property {number} MAX_AVATARS
  */
 var avatarParams = {
-  MIN_AVATARS: 8,
-  MAX_AVATARS: 99
+  MIN_AVATARS: 8
 };
 
 /**
@@ -208,10 +207,13 @@ var getCopy = function (original) {
  * @param {number} max - Максимальное количество изображений
  * @return {Array.<string>}
  */
-var getAvatarList = function (num, max) {
+var getAvatarList = function (num) {
   var avatarsList = [];
-  for (var i = 1; i <= num && i <= max; i++) {
-    var avatar = 'img/avatars/user0' + i + '.png';
+  for (var i = 1; i <= num; i++) {
+    var avatar = 'img/avatars/user' + i + '.png';
+    if (i <= 9) {
+      avatar = 'img/avatars/user0' + i + '.png';
+    }
     avatarsList.push(avatar);
   }
 
@@ -258,7 +260,7 @@ var getAvatarList = function (num, max) {
  */
 var getAdData = function (index) {
 
-  var avatars = shuffleArray(getAvatarList(avatarParams.MIN_AVATARS, avatarParams.MAX_AVATARS));
+  var avatars = shuffleArray(getAvatarList(avatarParams.MIN_AVATARS));
   var titles = shuffleArray(offerParams.TITLES);
   var locationX = getRandomInt(locationParams.x.MIN, locationParams.x.MAX);
   var locationY = getRandomInt(locationParams.y.MIN, locationParams.y.MAX);
@@ -312,7 +314,7 @@ var createAdData = function (num) {
 
 /**
  * Функция создания метки на карте
- * @param {Array.<Object>} adData
+ * @param {Array.<Ad>} adData
  * @param {number} index
  * @return {Node}
  */
@@ -330,7 +332,7 @@ var createPin = function (adData) {
 
 /**
  * Функция отрисовки меток
- * @param {Array.<Object>} adData
+ * @param {Array.<Ad>} adData
  * @return {DocumentFragment}
  */
 var renderPin = function (adData) {
@@ -345,37 +347,38 @@ var renderPin = function (adData) {
 
 /**
  * Функция создания элемента 'Feauture'
- * @param {string} element - Подставляемый текст
+ * @param {string} text - Подставляемый текст
  * @return {Node}
  */
-var createFeautureElement = function (element) {
+var createFeautureElement = function (text) {
   var newFuture = document.createElement('li');
 
-  newFuture.classList.add('popup__feature', 'popup__feature--' + element);
+  newFuture.classList.add('popup__feature');
+  newFuture.classList.add('popup__feature--' + text);
 
   return newFuture;
 };
 
 /**
  * Функция создания элемента 'Photo'
- * @param {string} element - Подставляемый текст
+ * @param {string} src - Подставляемый src
  * @return {Node}
  */
-var createPhotoElement = function (element) {
+var createPhotoElement = function (src) {
   var newPhoto = document.createElement('img');
 
   newPhoto.classList.add('popup__photo');
   newPhoto.width = newPhotoParams.WIDTH;
   newPhoto.height = newPhotoParams.HEIGHT;
   newPhoto.alt = newPhotoParams.ALT;
-  newPhoto.src = element;
+  newPhoto.src = src;
 
   return newPhoto;
 };
 
 /**
  * Функция создания карточки объявления
- * @param {Array.<Object>} adData
+ * @param {Array.<Ad>} adData
  * @param {number} index
  * @return {Node}
  */
@@ -408,19 +411,6 @@ var createMapCard = function (adData) {
 };
 
 /**
- * Функция отрисовки карточек объявления
- * @param {Array.<Object>} adData
- * @return {DocumentFragment}
- */
-var renderMapCard = function (adData) {
-  var fragment = document.createDocumentFragment();
-
-  fragment.appendChild(createMapCard(adData[0]));
-
-  return fragment;
-};
-
-/**
  * Функция отрисовки страницы
  */
 var initPage = function () {
@@ -429,7 +419,7 @@ var initPage = function () {
 
   var adsListData = createAdData(AD_NUM);
   var mapPinRender = renderPin(adsListData);
-  var mapCardRender = renderMapCard(adsListData);
+  var mapCardRender = createMapCard(adsListData[0]);
 
   mapPin.appendChild(mapPinRender);
   map.insertBefore(mapCardRender, map.querySelector('.map__filters-container'));

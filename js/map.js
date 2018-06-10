@@ -204,7 +204,6 @@ var getCopy = function (original) {
 /**
  * Функция получения src для изображений
  * @param {number} num - Количество изображений
- * @param {number} max - Максимальное количество изображений
  * @return {Array.<string>}
  */
 var getAvatarList = function (num) {
@@ -314,7 +313,6 @@ var createAdData = function (num) {
 /**
  * Функция создания метки на карте
  * @param {Array.<Ad>} adData
- * @param {number} index
  * @return {Node}
  */
 var createPin = function (adData) {
@@ -378,7 +376,6 @@ var createPhotoElement = function (src) {
 /**
  * Функция создания карточки объявления
  * @param {Ad} adDataObject
- * @param {number} index
  * @return {Node}
  */
 var createMapCard = function (adDataObject) {

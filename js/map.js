@@ -161,22 +161,13 @@ var newPhotoParams = {
   ALT: 'Фотография жилья'
 };
 
-/**
- * @typedef {Object} formStatus
- * @property {boolean} DISABLED
- * @property {boolean} ENABLED
- */
 var formStatus = {
   DISABLED: true,
   ENABLED: false
 };
 
 /**
- * @typedef {number} KeyCodes
- */
-
-/**
- * @enum {KeyCodes}
+ * @enum {number}
  */
 var KeyCodes = {
   ESC: 27
@@ -185,6 +176,7 @@ var KeyCodes = {
 var AD_NUM = 8;
 var activePin;
 var activeCard;
+var activePage;
 var mapCardTemplate = document.querySelector('#map-card-template').content.querySelector('.map__card');
 var mapPinTemplate = document.querySelector('#map-card-template').content.querySelector('.map__pin');
 var map = document.querySelector('.map');
@@ -466,16 +458,16 @@ var changeStatusFormElements = function (status) {
 };
 
 /**
- * @typedef {Object} mainPinCoordinate
+ * @typedef {Object} mainPinCoordinates
  * @property {x}
  * @property {y}
  */
 
 /**
  * Функция получения координат главного пина
- * @return {mainPinCoordinate}
+ * @return {mainPinCoordinates}
  */
-var getMainPinCoordinate = function () {
+var getMainPinCoordinates = function () {
   var x = mapMainPin.offsetTop - mainPinParams.WIDTH / 2;
   var y = mapMainPin.offsetLeft - mainPinParams.HEIGHT;
 
@@ -489,7 +481,8 @@ var getMainPinCoordinate = function () {
  * Функция получения адреса
  */
 var getAdFormAddress = function () {
-  addressInput.value = getMainPinCoordinate().x + ', ' + getMainPinCoordinate().y;
+  var mainPinCoordinates = getMainPinCoordinates();
+  addressInput.value = mainPinCoordinates.x + ', ' + mainPinCoordinates.y;
 };
 
 /**
@@ -583,8 +576,9 @@ var initPage = function () {
   disablePage();
 
   mapMainPin.addEventListener('mouseup', function () {
-    if (map.classList.contains('map--faded')) {
+    if (!activePage) {
       activatePage();
+      activePage = true;
     }
 
     getAdFormAddress();

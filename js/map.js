@@ -126,6 +126,16 @@ var pinParams = {
 };
 
 /**
+ * @typedef {Object} MainPinParams
+ * @property {number} WIDTH
+ * @property {number} HEIGHT
+ */
+var mainPinParams = {
+  WIDTH: 65,
+  HEIGHT: 84
+};
+
+/**
  * @typedef {Objeсt} X
  * @property {string} palace
  * @property {string} flat
@@ -151,9 +161,31 @@ var newPhotoParams = {
   ALT: 'Фотография жилья'
 };
 
+var formStatus = {
+  DISABLED: true,
+  ENABLED: false
+};
+
+/**
+ * @enum {number}
+ */
+var KeyCodes = {
+  ESC: 27
+};
+
 var AD_NUM = 8;
+var activePin;
+var activeCard;
+var activePage;
 var mapCardTemplate = document.querySelector('#map-card-template').content.querySelector('.map__card');
 var mapPinTemplate = document.querySelector('#map-card-template').content.querySelector('.map__pin');
+var map = document.querySelector('.map');
+var mapPins = map.querySelector('.map__pins');
+var mapMainPin = map.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var adFormHeader = adForm.querySelector('.ad-form-header');
+var adFormElements = adForm.querySelectorAll('.ad-form__element');
+var addressInput = adForm.querySelector('#address');
 
 /**
  * Функция тасования Фишера-Йетса
@@ -317,12 +349,19 @@ var createAdData = function (num) {
  */
 var createPin = function (adData) {
   var mapPinElement = mapPinTemplate.cloneNode(true);
-  var mapPinImg = mapPinTemplate.querySelector('img');
+  var mapPinImg = mapPinElement.querySelector('img');
 
   mapPinElement.style.left = adData.location.x - pinParams.WIDTH / 2 + 'px';
   mapPinElement.style.top = adData.location.y - pinParams.HEIGHT + 'px';
   mapPinImg.src = adData.author.avatar;
   mapPinImg.alt = adData.offer.title;
+
+  mapPinElement.addEventListener('click', function (evt) {
+    if (activePin !== evt.currentTarget) {
+      initCard(adData);
+      activatePin(evt.currentTarget);
+    }
+  });
 
   return mapPinElement;
 };
@@ -398,24 +437,152 @@ var createMapCard = function (adDataObject) {
     mapCardElement.querySelector('.popup__photos').appendChild(createPhotoElement(element));
   });
 
+  mapCardElement.querySelector('.popup__close').addEventListener('click', function () {
+    disableCard();
+    disablePin();
+  });
+  document.addEventListener('keydown', onCardEscPress);
+
   return mapCardElement;
 };
 
 /**
- * Функция отрисовки страницы
+ * Функция изменения состояния элементов формы
+ * @param {boolean} status
+ */
+var changeStatusFormElements = function (status) {
+  adFormHeader.disabled = status;
+  adFormElements.forEach(function (element) {
+    element.disabled = status;
+  });
+};
+
+/**
+ * @typedef {Object} mainPinCoordinates
+ * @property {x}
+ * @property {y}
+ */
+
+/**
+ * Функция получения координат главного пина
+ * @return {mainPinCoordinates}
+ */
+var getMainPinCoordinates = function () {
+  var x = mapMainPin.offsetTop - mainPinParams.WIDTH / 2;
+  var y = mapMainPin.offsetLeft - mainPinParams.HEIGHT;
+
+  return {
+    x: x,
+    y: y
+  };
+};
+
+/**
+ * Функция получения адреса
+ */
+var getAdFormAddress = function () {
+  var mainPinCoordinates = getMainPinCoordinates();
+  addressInput.value = mainPinCoordinates.x + ', ' + mainPinCoordinates.y;
+};
+
+/**
+ * Функция отключения карточки объявления при нажатии клавиши ESC
+ * @param {number} evt
+ */
+var onCardEscPress = function (evt) {
+  if (evt.keyCode === KeyCodes.ESC) {
+    disableCard();
+    disablePin();
+  }
+};
+
+/**
+ * Функция отключения карточки объявления
+ */
+var disableCard = function () {
+  map.removeChild(activeCard);
+  document.removeEventListener('keydown', onCardEscPress);
+  activeCard = null;
+};
+
+/**
+ * Функция инизиализации карточки объявления
+ * @param {Array.<Ad>} adData
+ */
+var initCard = function (adData) {
+  if (activeCard) {
+    disableCard();
+  }
+
+  var mapCardRender = createMapCard(adData);
+  map.insertBefore(mapCardRender, map.querySelector('.map__filters-container'));
+  activeCard = mapCardRender;
+};
+
+/**
+ * Функция приведения пина в активное состояние
+ * @param {string} element
+ */
+var activatePin = function (element) {
+  if (activePin) {
+    disablePin();
+  }
+  activePin = element;
+  activePin.classList.add('map__pin--active');
+};
+
+/**
+ * Функция приведения пина в неактивное состояние
+ */
+var disablePin = function () {
+  activePin.classList.remove('map__pin--active');
+  activePin = null;
+};
+
+/**
+ * Функция инициализации пина
+ * @param {Array.<Ad>} adData
+ */
+var initPins = function (adData) {
+  var mapPinRender = renderPin(adData);
+  mapPins.appendChild(mapPinRender);
+};
+
+/**
+ * Функция приведения страницы в активное состояние
+ */
+var activatePage = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  changeStatusFormElements(formStatus.ENABLED);
+  var adsListData = createAdData(AD_NUM);
+  initPins(adsListData);
+};
+
+/**
+ * Функция приведения страницы в неактивное состояние
+ */
+var disablePage = function () {
+  map.classList.add('map--faded');
+  adForm.classList.add('ad-form--disabled');
+  changeStatusFormElements(formStatus.DISABLED);
+  getAdFormAddress();
+};
+
+/**
+ * Функция инициализации страницы
  */
 var initPage = function () {
-  var map = document.querySelector('.map');
-  var mapPin = map.querySelector('.map__pins');
+  disablePage();
 
-  var adsListData = createAdData(AD_NUM);
-  var mapPinRender = renderPin(adsListData);
-  var mapCardRender = createMapCard(adsListData[0]);
+  mapMainPin.addEventListener('mouseup', function () {
+    if (!activePage) {
+      activatePage();
+      activePage = true;
+    }
 
-  mapPin.appendChild(mapPinRender);
-  map.insertBefore(mapCardRender, map.querySelector('.map__filters-container'));
-
-  map.classList.remove('map--faded');
+    getAdFormAddress();
+  });
 };
 
 initPage();

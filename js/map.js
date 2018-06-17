@@ -132,7 +132,9 @@ var pinParams = {
  */
 var mainPinParams = {
   WIDTH: 65,
-  HEIGHT: 84
+  HEIGHT: 84,
+  DEFAULT_X: '570px',
+  DEFAULT_Y: '375px'
 };
 
 /**
@@ -174,6 +176,7 @@ var KeyCodes = {
 };
 
 var AD_NUM = 8;
+var mapPinElements = [];
 var activePin;
 var activeCard;
 var activePage;
@@ -363,6 +366,7 @@ var createPin = function (adData) {
     }
   });
 
+  mapPinElements.push(mapPinElement);
   return mapPinElement;
 };
 
@@ -468,8 +472,8 @@ var changeStatusFormElements = function (status) {
  * @return {mainPinCoordinates}
  */
 var getMainPinCoordinates = function () {
-  var x = mapMainPin.offsetTop - mainPinParams.WIDTH / 2;
-  var y = mapMainPin.offsetLeft - mainPinParams.HEIGHT;
+  var x = mapMainPin.offsetLeft + mainPinParams.WIDTH / 2;
+  var y = mapMainPin.offsetTop + mainPinParams.HEIGHT;
 
   return {
     x: x,
@@ -557,6 +561,8 @@ var activatePage = function () {
   changeStatusFormElements(formStatus.ENABLED);
   var adsListData = createAdData(AD_NUM);
   initPins(adsListData);
+  window.onHousingTypeOptionChange();
+  window.onRoomsOptionChange();
 };
 
 /**
@@ -566,7 +572,20 @@ var disablePage = function () {
   map.classList.add('map--faded');
   adForm.classList.add('ad-form--disabled');
   changeStatusFormElements(formStatus.DISABLED);
+  mapMainPin.style.left = mainPinParams.DEFAULT_X;
+  mapMainPin.style.top = mainPinParams.DEFAULT_Y;
   getAdFormAddress();
+
+  if (activeCard) {
+    disableCard();
+  }
+
+  mapPinElements.forEach(function (element) {
+    mapPins.removeChild(element);
+  });
+
+  mapPinElements = [];
+  activePage = false;
 };
 
 /**

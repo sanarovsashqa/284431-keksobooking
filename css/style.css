@@ -1217,6 +1217,6 @@ fieldset {
           transform: translateX(-50%);
 }
 
-.ad-form__element input[class='invalid-field'] {
+.ad-form__element input.invalid-field {
   border: 2px solid red;
 }

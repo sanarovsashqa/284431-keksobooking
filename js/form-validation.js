@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * @typedef {Objeсt} minPrice
+ * @property {number} bungalo
+ * @property {number} flat
+ * @property {number} house
+ * @property {number} palace
+ */
 var minPrice = {
   'bungalo': 0,
   'flat': 1000,
@@ -7,6 +14,13 @@ var minPrice = {
   'palace': 10000
 };
 
+/**
+ * @typedef {Objeсt} roomCapacity
+ * @property {Array.<string>} oneRoom
+ * @property {Array.<string>} twoRooms
+ * @property {Array.<string>} threeRooms
+ * @property {Array.<string>} hundredRooms
+ */
 var roomCapacity = {
   '1': ['1'],
   '2': ['1', '2'],
@@ -27,33 +41,31 @@ var capacitySelect = adForm.querySelector('#capacity');
 var capacityOptions = capacitySelect.querySelectorAll('option');
 var adFormReset = adForm.querySelector('.ad-form__reset');
 
+/**
+ * Функция изменяющая значение "Цена за ночь" в связи со значением "Тип жилья"
+ */
 var onHousingTypeOptionChange = function () {
   priceInput.min = minPrice[housingTypeSelect.value];
   priceInput.placeholder = minPrice[housingTypeSelect.value];
 };
 
-var onTimeinOptionChange = function () {
-  var time = timeinSelect.value;
-  timeinSelect.value = time;
-  timeoutSelect.value = time;
+/**
+ * Функция синхронизирующая поля "Время заезда" и "Время выезда"
+ * @param {HTMLElement} element
+ * @param {string} value
+ */
+var onTimeOptionChange = function (element, value) {
+  element.value = value;
 };
 
-var onTimeoutOptionChange = function () {
-  var time = timeoutSelect.value;
-  timeinSelect.value = time;
-  timeoutSelect.value = time;
-};
-
+/**
+ * Функция синхронизурующая поля "Количество комнат" и "Количество мест"
+ */
 var onRoomsOptionChange = function () {
   capacityOptions.forEach(function (element) {
-    if (roomCapacity[roomsSelect.value].indexOf(element.value) !== -1) {
-      element.setAttribute('selected', 'selected');
-      element.removeAttribute('disabled');
-    } else {
-      element.setAttribute('disabled', 'disabled');
-      element.removeAttribute('selected');
-    }
+    element.disabled = !roomCapacity[roomsSelect.value].includes(element.value);
   });
+  capacitySelect.value = roomCapacity[roomsSelect.value].includes(capacitySelect.value) ? capacitySelect.value : roomCapacity[roomsSelect.value][0];
 };
 
 var onElementCheckValidity = function (evt) {
@@ -66,6 +78,9 @@ var onElementCheckValidity = function (evt) {
   }
 };
 
+/**
+ * Функция очистки страницы
+ */
 var clearPage = function () {
   invalidElements.forEach(function (element) {
     element.classList.remove('invalid-field');
@@ -75,11 +90,18 @@ var clearPage = function () {
 };
 
 housingTypeSelect.addEventListener('change', onHousingTypeOptionChange);
-timeinSelect.addEventListener('change', onTimeinOptionChange);
-timeoutSelect.addEventListener('change', onTimeoutOptionChange);
 roomsSelect.addEventListener('change', onRoomsOptionChange);
 priceInput.addEventListener('change', onElementCheckValidity);
 titleInput.addEventListener('change', onElementCheckValidity);
+timeinSelect.addEventListener('change', function (evt) {
+  onTimeOptionChange(timeoutSelect, evt.target.value);
+});
+timeoutSelect.addEventListener('change', function (evt) {
+  onTimeOptionChange(timeinSelect, evt.target.value);
+});
 adFormReset.addEventListener('click', function () {
   clearPage();
+});
+adForm.addEventListener('invalid', function () {
+  onElementCheckValidity();
 });

@@ -472,8 +472,8 @@ var changeStatusFormElements = function (status) {
  * @return {mainPinCoordinates}
  */
 var getMainPinCoordinates = function () {
-  var x = mapMainPin.offsetTop - mainPinParams.WIDTH / 2;
-  var y = mapMainPin.offsetLeft - mainPinParams.HEIGHT;
+  var x = mapMainPin.offsetLeft + mainPinParams.WIDTH / 2;
+  var y = mapMainPin.offsetTop + mainPinParams.HEIGHT;
 
   return {
     x: x,

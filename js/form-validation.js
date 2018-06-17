@@ -1,13 +1,9 @@
 'use strict';
 
 /**
- * @typedef {Objeсt} minPrice
- * @property {number} bungalo
- * @property {number} flat
- * @property {number} house
- * @property {number} palace
+ * @enum {number}
  */
-var minPrice = {
+var MinPrice = {
   'bungalo': 0,
   'flat': 1000,
   'house': 5000,
@@ -45,8 +41,8 @@ var adFormReset = adForm.querySelector('.ad-form__reset');
  * Функция изменяющая значение "Цена за ночь" в связи со значением "Тип жилья"
  */
 var onHousingTypeOptionChange = function () {
-  priceInput.min = minPrice[housingTypeSelect.value];
-  priceInput.placeholder = minPrice[housingTypeSelect.value];
+  priceInput.min = MinPrice[housingTypeSelect.value];
+  priceInput.placeholder = MinPrice[housingTypeSelect.value];
 };
 
 /**
@@ -68,13 +64,29 @@ var onRoomsOptionChange = function () {
   capacitySelect.value = roomCapacity[roomsSelect.value].includes(capacitySelect.value) ? capacitySelect.value : roomCapacity[roomsSelect.value][0];
 };
 
+/**
+ * Функция подсвечивания невалидных элементов
+ * @param {Node} element
+ */
+var highlightIncorrectElement = function (element) {
+  invalidElements.push(element);
+  element.classList.add('invalid-field');
+};
+
+/**
+ * Функция снятия подсветки невалидных элементов
+ * @param {Node} element
+ */
+var unhighlightIncorrectElement = function (element) {
+  invalidElements.splice(invalidElements.indexOf(element), 1);
+  element.classList.remove('invalid-field');
+};
+
 var onElementCheckValidity = function (evt) {
   if (!evt.target.checkValidity()) {
-    invalidElements.push(evt.target);
-    evt.target.classList.add('invalid-field');
+    highlightIncorrectElement(evt.target);
   } else if (invalidElements.indexOf(evt.target) !== 1) {
-    invalidElements.splice(invalidElements.indexOf(evt.target), 1);
-    evt.target.classList.remove('invalid-field');
+    unhighlightIncorrectElement(evt.target);
   }
 };
 
@@ -102,6 +114,6 @@ timeoutSelect.addEventListener('change', function (evt) {
 adFormReset.addEventListener('click', function () {
   clearPage();
 });
-adForm.addEventListener('invalid', function () {
-  onElementCheckValidity();
-});
+adForm.addEventListener('invalid', function (evt) {
+  highlightIncorrectElement(evt.target);
+}, true);

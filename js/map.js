@@ -126,15 +126,35 @@ var pinParams = {
 };
 
 /**
+ * @typedef {Objeсt} mainPinParamsY
+ * @property {number} MIN
+ * @property {number} MAX
+ */
+
+/**
+ * @typedef {Objeсt} mainPinParamsX
+ * @property {number} MIN
+ */
+
+/**
  * @typedef {Object} MainPinParams
  * @property {number} WIDTH
  * @property {number} HEIGHT
+ * @property {mainPinParamsY}
+ * @property {mainPinParamsX}
  */
 var mainPinParams = {
   WIDTH: 65,
   HEIGHT: 84,
   DEFAULT_X: '570px',
-  DEFAULT_Y: '375px'
+  DEFAULT_Y: '375px',
+  y: {
+    MIN: 130,
+    MAX: 630
+  },
+  x: {
+    MIN: 0
+  }
 };
 
 /**
@@ -472,7 +492,7 @@ var changeStatusFormElements = function (status) {
  * @return {mainPinCoordinates}
  */
 var getMainPinCoordinates = function () {
-  var x = mapMainPin.offsetLeft + mainPinParams.WIDTH / 2;
+  var x = mapMainPin.offsetLeft + Math.floor(mainPinParams.WIDTH / 2);
   var y = mapMainPin.offsetTop + mainPinParams.HEIGHT;
 
   return {
@@ -594,13 +614,54 @@ var disablePage = function () {
 var initPage = function () {
   disablePage();
 
-  mapMainPin.addEventListener('mouseup', function () {
-    if (!activePage) {
-      activatePage();
-      activePage = true;
-    }
+  mapMainPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
 
-    getAdFormAddress();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+
+    var onMouseMove = function (moveEvt) {
+      moveEvt.preventDefault();
+
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+        y: startCoords.y - moveEvt.clientY
+      };
+
+      startCoords = {
+        x: moveEvt.clientX,
+        y: moveEvt.clientY
+      };
+
+      var mainPinCoords = getMainPinCoordinates();
+
+      if (mainPinCoords.y - shift.y >= mainPinParams.y.MIN && mainPinCoords.y - shift.y <= mainPinParams.y.MAX) {
+        mapMainPin.style.top = mapMainPin.offsetTop - shift.y + 'px';
+      }
+
+      if (mainPinCoords.x - shift.x >= mainPinParams.x.MIN && mainPinCoords.x - shift.x <= mapPins.offsetWidth) {
+        mapMainPin.style.left = (mapMainPin.offsetLeft - shift.x) + 'px';
+      }
+    };
+
+    var onMouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      if (!activePage) {
+        activatePage();
+        activePage = true;
+      }
+
+      getAdFormAddress();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', onMouseUp);
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
   });
 };
 

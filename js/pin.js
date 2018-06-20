@@ -20,7 +20,7 @@
    */
   var activatePin = function (element) {
     if (activePin) {
-      disablePin();
+      deactivatePin();
     }
     activePin = element;
     activePin.classList.add('map__pin--active');
@@ -29,7 +29,7 @@
   /**
    * Функция приведения пина в неактивное состояние
    */
-  var disablePin = function () {
+  var deactivatePin = function () {
     activePin.classList.remove('map__pin--active');
     activePin = null;
   };
@@ -60,6 +60,6 @@
 
   window.pin = {
     create: createPin,
-    disable: disablePin,
+    deactivate: deactivatePin,
   };
 })();

@@ -30,13 +30,13 @@
    * @param {string} text - Подставляемый текст
    * @return {Node}
    */
-  var createFeautureElement = function (text) {
-    var newFuture = document.createElement('li');
+  var createFeature = function (text) {
+    var feature = document.createElement('li');
 
-    newFuture.classList.add('popup__feature');
-    newFuture.classList.add('popup__feature--' + text);
+    feature.classList.add('popup__feature');
+    feature.classList.add('popup__feature--' + text);
 
-    return newFuture;
+    return feature;
   };
 
   /**
@@ -44,16 +44,16 @@
    * @param {string} src - Подставляемый src
    * @return {Node}
    */
-  var createPhotoElement = function (src) {
-    var newPhoto = document.createElement('img');
+  var createPhoto = function (src) {
+    var photo = document.createElement('img');
 
-    newPhoto.classList.add('popup__photo');
-    newPhoto.width = photoParams.WIDTH;
-    newPhoto.height = photoParams.HEIGHT;
-    newPhoto.alt = photoParams.ALT;
-    newPhoto.src = src;
+    photo.classList.add('popup__photo');
+    photo.width = photoParams.WIDTH;
+    photo.height = photoParams.HEIGHT;
+    photo.alt = photoParams.ALT;
+    photo.src = src;
 
-    return newPhoto;
+    return photo;
   };
 
   /**
@@ -74,16 +74,16 @@
     card.querySelector('.popup__avatar').src = adData.author.avatar;
 
     adData.offer.feautures.forEach(function (element) {
-      card.querySelector('.popup__features').appendChild(createFeautureElement(element));
+      card.querySelector('.popup__features').appendChild(createFeature(element));
     });
 
     adData.offer.photos.forEach(function (element) {
-      card.querySelector('.popup__photos').appendChild(createPhotoElement(element));
+      card.querySelector('.popup__photos').appendChild(createPhoto(element));
     });
 
     card.querySelector('.popup__close').addEventListener('click', function () {
       disableCard();
-      window.pin.disable();
+      window.pin.deactivate();
     });
     document.addEventListener('keydown', onCardEscPress);
 
@@ -97,7 +97,7 @@
   var onCardEscPress = function (evt) {
     if (evt.keyCode === KeyCodes.ESC) {
       disableCard();
-      window.pin.disable();
+      window.pin.deactivate();
     }
   };
 

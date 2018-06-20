@@ -18,6 +18,11 @@
     '100': ['0']
   };
 
+  var formStatus = {
+    DISABLED: true,
+    ENABLED: false
+  };
+
   var invalidElements = [];
   var form = document.querySelector('.ad-form');
   var titleInput = document.querySelector('#title');
@@ -46,10 +51,10 @@
 
   /**
    * Функция получения адреса
+   * @param {MainPinCoordinates} adress
    */
-  var getFormAddress = function () {
-    var mainPinCoords = window.map.mainPinCoords();
-    addressInput.value = mainPinCoords.x + ', ' + mainPinCoords.y;
+  var setFormAddress = function (adress) {
+    addressInput.value = adress.x + ', ' + adress.y;
   };
 
   /**
@@ -65,16 +70,16 @@
    * @param {HTMLElement} element
    * @param {string} value
    */
-  var timeOption = function (element, value) {
+  var setTimeOption = function (element, value) {
     element.value = value;
   };
 
   var onTimeoutOptionChange = function (evt) {
-    timeOption(timeoutSelect, evt.target.value);
+    setTimeOption(timeoutSelect, evt.target.value);
   };
 
   var onTimeinOptionChange = function (evt) {
-    timeOption(timeinSelect, evt.target.value);
+    setTimeOption(timeinSelect, evt.target.value);
   };
 
   /**
@@ -120,12 +125,27 @@
   /**
    * Функция очистки страницы
    */
-  var clearPage = function () {
+  var onClearButtonClick = function () {
     invalidElements.forEach(function (element) {
       element.classList.remove('invalid-field');
     });
     form.reset();
-    window.map.disablePage();
+    deactivateForm();
+    window.map.deactivate();
+  };
+
+  var activateForm = function () {
+    form.classList.remove('ad-form--disabled');
+    changeStatusForm(formStatus.ENABLED);
+    addFormListeners();
+  };
+
+  var deactivateForm = function () {
+    form.classList.add('ad-form--disabled');
+    changeStatusForm(formStatus.DISABLED);
+    onHousingTypeOptionChange();
+    onRoomsOptionChange();
+    removeFormListeners();
   };
 
   /**
@@ -138,7 +158,7 @@
     titleInput.addEventListener('change', onElementCheckValidity);
     timeinSelect.addEventListener('change', onTimeoutOptionChange);
     timeoutSelect.addEventListener('change', onTimeinOptionChange);
-    formReset.addEventListener('click', clearPage);
+    formReset.addEventListener('click', onClearButtonClick);
     form.addEventListener('invalid', onFormInvalid, true);
   };
 
@@ -152,16 +172,13 @@
     titleInput.removeEventListener('change', onElementCheckValidity);
     timeinSelect.removeEventListener('change', onTimeoutOptionChange);
     timeoutSelect.removeEventListener('change', onTimeinOptionChange);
-    formReset.removeEventListener('click', clearPage);
+    formReset.removeEventListener('click', onClearButtonClick);
     form.removeEventListener('invalid', onFormInvalid, true);
   };
 
   window.form = {
-    getAdress: getFormAddress,
-    changeStatus: changeStatusForm,
-    onHousingTypeOptionChange: onHousingTypeOptionChange,
-    onRoomsOptionChange: onRoomsOptionChange,
-    addListeners: addFormListeners,
-    removeListeners: removeFormListeners
+    setAdress: setFormAddress,
+    activate: activateForm,
+    deactivate: deactivateForm
   };
 })();

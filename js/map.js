@@ -15,7 +15,6 @@
     }
   };
 
-  var ADS_NUM = 8;
   var activePage;
   var pinElements = [];
   var map = document.querySelector('.map');
@@ -42,26 +41,7 @@
     };
   };
 
-  /**
-   * Функция получения данных для объявлений
-   * @param {number} num - Количсетво объявлений
-   * @return {Array.<AdData>}
-   */
-  var getAdsData = function (num) {
-    var adsData = [];
-
-    for (var i = 0; i < num; i++) {
-      adsData.push(window.getAdData(i));
-    }
-
-    return adsData;
-  };
-
-  /**
-   * Функция отрисовки пинов
-   * @param {Array.<AdData>} adData
-   */
-  var renderPins = function (adData) {
+  var onLoadSuccess = function (adData) {
     var fragment = document.createDocumentFragment();
 
     adData.forEach(function (element) {
@@ -73,12 +53,16 @@
     pins.appendChild(fragment);
   };
 
+  var onLoadError = function (errorMessage) {
+    window.createErrorMessage(errorMessage);
+  };
+
   /**
    * Функция приведения страницы в активное состояние
    */
   var activateMap = function () {
     map.classList.remove('map--faded');
-    renderPins(getAdsData(ADS_NUM));
+    window.backend.load(onLoadSuccess, onLoadError);
     window.form.activate();
   };
 

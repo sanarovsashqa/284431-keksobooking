@@ -25,7 +25,7 @@
 
   var invalidElements = [];
   var form = document.querySelector('.ad-form');
-  var titleInput = document.querySelector('#title');
+  var titleInput = form.querySelector('#title');
   var addressInput = form.querySelector('#address');
   var housingTypeSelect = form.querySelector('#type');
   var priceInput = form.querySelector('#price');
@@ -37,6 +37,7 @@
   var formReset = form.querySelector('.ad-form__reset');
   var formHeader = form.querySelector('.ad-form-header');
   var formElements = form.querySelectorAll('.ad-form__element');
+  var success = document.querySelector('.success');
 
   /**
    * Функция изменения состояния элементов формы
@@ -134,6 +135,37 @@
     window.map.deactivate();
   };
 
+  var onSubmitSuccess = function () {
+    onClearButtonClick();
+    success.classList.remove('hidden');
+    document.addEventListener('click', onSuccessMessageClick);
+    document.addEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onSubmitError = function (errorMessage) {
+    window.createErrorMessage(errorMessage);
+  };
+
+  var closeSuccessMessage = function () {
+    success.classList.add('hidden');
+    document.removeEventListener('click', onSuccessMessageClick);
+    document.removeEventListener('keydown', onSuccessMessageEscPress);
+  };
+
+  var onSuccessMessageClick = function () {
+    closeSuccessMessage();
+  };
+
+  var onSuccessMessageEscPress = function (evt) {
+    window.callEscPress(evt, closeSuccessMessage);
+  };
+
+  var onFormSubmit = function (evt) {
+    evt.preventDefault();
+    var formData = new FormData(form);
+    window.backend.upload(onSubmitSuccess, onSubmitError, formData);
+  };
+
   var activateForm = function () {
     form.classList.remove('ad-form--disabled');
     changeStatusForm(formStatus.ENABLED);
@@ -160,6 +192,7 @@
     timeoutSelect.addEventListener('change', onTimeinOptionChange);
     formReset.addEventListener('click', onClearButtonClick);
     form.addEventListener('invalid', onFormInvalid, true);
+    form.addEventListener('submit', onFormSubmit);
   };
 
   /**

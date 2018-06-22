@@ -14,13 +14,6 @@
     ALT: 'Фотография жилья'
   };
 
-  /**
-   * @enum {number}
-   */
-  var KeyCodes = {
-    ESC: 27
-  };
-
   var activeCard;
   var cardTemplate = document.querySelector('#map-card-template').content.querySelector('.map__card');
   var map = document.querySelector('.map');
@@ -73,7 +66,7 @@
     card.querySelector('.popup__description').textContent = adData.offer.description;
     card.querySelector('.popup__avatar').src = adData.author.avatar;
 
-    adData.offer.feautures.forEach(function (element) {
+    adData.offer.features.forEach(function (element) {
       card.querySelector('.popup__features').appendChild(createFeature(element));
     });
 
@@ -95,10 +88,7 @@
    * @param {number} evt
    */
   var onCardEscPress = function (evt) {
-    if (evt.keyCode === KeyCodes.ESC) {
-      disableCard();
-      window.pin.deactivate();
-    }
+    window.callEscPress(evt, disableCard);
   };
 
   /**
@@ -108,6 +98,7 @@
     if (activeCard) {
       map.removeChild(activeCard);
       document.removeEventListener('keydown', onCardEscPress);
+      window.pin.deactivate();
       activeCard = null;
     }
   };

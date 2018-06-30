@@ -58,7 +58,7 @@
     var card = cardTemplate.cloneNode(true);
 
     card.querySelector('.popup__title').textContent = adData.offer.title;
-    card.querySelector('.popup__text--address').textContent = adData.offer.adress;
+    card.querySelector('.popup__text--address').textContent = adData.offer.address;
     card.querySelector('.popup__text--price').textContent = adData.offer.price + '₽/ночь';
     card.querySelector('.popup__type').textContent = offerTypesTranslation[adData.offer.type];
     card.querySelector('.popup__text--capacity').textContent = adData.offer.rooms + ' комнаты для ' + adData.offer.guests + ' гостей';
@@ -66,13 +66,22 @@
     card.querySelector('.popup__description').textContent = adData.offer.description;
     card.querySelector('.popup__avatar').src = adData.author.avatar;
 
-    adData.offer.features.forEach(function (element) {
-      card.querySelector('.popup__features').appendChild(createFeature(element));
-    });
 
-    adData.offer.photos.forEach(function (element) {
-      card.querySelector('.popup__photos').appendChild(createPhoto(element));
-    });
+    if (adData.offer.features.length !== 0) {
+      adData.offer.features.forEach(function (element) {
+        card.querySelector('.popup__features').appendChild(createFeature(element));
+      });
+    } else {
+      card.removeChild(card.querySelector('.popup__features'));
+    }
+
+    if (adData.offer.photos.length !== 0) {
+      adData.offer.photos.forEach(function (element) {
+        card.querySelector('.popup__photos').appendChild(createPhoto(element));
+      });
+    } else {
+      card.removeChild(card.querySelector('.popup__photos'));
+    }
 
     card.querySelector('.popup__close').addEventListener('click', function () {
       disableCard();
@@ -88,7 +97,7 @@
    * @param {number} evt
    */
   var onCardEscPress = function (evt) {
-    window.callEscPress(evt, disableCard);
+    window.utils.callEscPress(evt, disableCard);
   };
 
   /**

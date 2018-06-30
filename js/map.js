@@ -16,10 +16,8 @@
   };
 
   var activePage;
-  var pinElements = [];
   var map = document.querySelector('.map');
   var mainPin = map.querySelector('.map__pin--main');
-  var pins = map.querySelector('.map__pins');
 
   /**
    * @typedef {Object} mainPinCoordinates
@@ -42,15 +40,7 @@
   };
 
   var onLoadSuccess = function (adData) {
-    var fragment = document.createDocumentFragment();
-
-    adData.forEach(function (element) {
-      var pin = window.pin.create(element);
-      fragment.appendChild(pin);
-      pinElements.push(pin);
-    });
-
-    pins.appendChild(fragment);
+    window.pins.create(window.filter.activate(adData));
   };
 
   var onLoadError = function (errorMessage) {
@@ -76,12 +66,8 @@
     window.card.disable();
     window.form.deactivate();
     window.form.setAdress(getMainPinCoords());
-
-    pinElements.forEach(function (element) {
-      pins.removeChild(element);
-    });
-
-    pinElements = [];
+    window.pins.remove();
+    window.filter.deactivate();
     activePage = false;
   };
 

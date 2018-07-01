@@ -6,6 +6,14 @@
     UPLOAD: 'https://js.dump.academy/keksobooking/'
   };
 
+  /**
+   * Функция создания xhr
+   * @param {string} method
+   * @param {string} url
+   * @param {function} onLoad
+   * @param {function} onError
+   * @param {Object} data
+   */
   var getXhr = function (method, url, onLoad, onError, data) {
     var xhr = new XMLHttpRequest();
 

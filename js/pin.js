@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  /**
-   * @typedef {Objeсt} PinParams
-   * @property {number} WIDTH
-   * @property {number} HEIGHT
-   */
   var pinParams = {
     WIDTH: 50,
     HEIGHT: 70

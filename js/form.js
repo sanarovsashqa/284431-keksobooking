@@ -157,7 +157,7 @@
   };
 
   var onSuccessMessageEscPress = function (evt) {
-    window.callEscPress(evt, closeSuccessMessage);
+    window.utils.callEscPress(evt, closeSuccessMessage);
   };
 
   var onFormSubmit = function (evt) {

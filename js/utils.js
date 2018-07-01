@@ -16,6 +16,11 @@
     }
   };
 
+  /**
+   * Функция устранения дребезга
+   * @param {function} callback
+   * @return {function}
+   */
   var debounce = function (callback) {
     var lastTimeout = null;
 

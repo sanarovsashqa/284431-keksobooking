@@ -21,18 +21,22 @@
       MAX: 50000
     },
     high: {
-      MIN: 50000,
+      MIN: 50001,
       MAX: Infinity
     }
   };
 
   var PINS_NUM = 5;
 
+
+  /**
+   * Функция фильтрации элементов для полей "тип", "кол-во комнат", "кол-во гостей"
+   * @param {Element} element
+   * @param {string} key
+   * @param {Object} item
+   * @return {Boolean}
+   */
   var filterElement = function (element, key, item) {
-    if (key === 'price') {
-      var priceValue = priceRange[element.value];
-      return priceValue ? item[key] >= priceValue.MIN && item[key] <= priceValue.MAX : true;
-    }
     return element.value === 'any' ? true : element.value === item[key].toString();
   };
 
@@ -41,7 +45,8 @@
   };
 
   var filterPrice = function (item) {
-    return filterElement(priceSelect, 'price', item.offer);
+    var priceValue = priceRange[priceSelect.value];
+    return priceValue ? item.offer.price >= priceValue.MIN && item.offer.price <= priceValue.MAX : true;
   };
 
   var filterRooms = function (item) {
@@ -86,12 +91,20 @@
     filter.removeEventListener('change', onFiltersChange);
   };
 
+  /**
+   * Функция приведения фильтров в активное состояние
+   * @param {Array.<AdData>} adData
+   * @return {Array}
+   */
   var activateFilters = function (adData) {
     data = adData.slice();
     enableFilters();
     return adData.slice(0, PINS_NUM);
   };
 
+  /**
+   * Функция приведения фильтров в неактивное состояние
+   */
   var deactivateFilters = function () {
     disableFilters();
     filter.reset();

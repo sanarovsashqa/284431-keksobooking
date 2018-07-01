@@ -67,7 +67,7 @@
     card.querySelector('.popup__avatar').src = adData.author.avatar;
 
 
-    if (adData.offer.features.length !== 0) {
+    if (adData.offer.features.length) {
       adData.offer.features.forEach(function (element) {
         card.querySelector('.popup__features').appendChild(createFeature(element));
       });
@@ -75,7 +75,7 @@
       card.removeChild(card.querySelector('.popup__features'));
     }
 
-    if (adData.offer.photos.length !== 0) {
+    if (adData.offer.photos.length) {
       adData.offer.photos.forEach(function (element) {
         card.querySelector('.popup__photos').appendChild(createPhoto(element));
       });

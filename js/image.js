@@ -29,19 +29,19 @@
     image.src = src;
     image.style.width = PhotoParams.WIDTH;
     image.style.height = PhotoParams.HEIGHT;
-    image.classList.add('ad-form__photo--upload');
+    images.push(image);
     photoPreviewClone.appendChild(image);
     photoContainer.insertBefore(photoPreviewClone, photoPreview);
   };
 
   /**
    * Функция отрисовки изображений
-   * @param {Array} files
+   * @param {Element} chooser
    * @param {function} callback
    */
-  var loadImages = function (files, callback) {
-    if (files) {
-      Array.from(files).forEach(function (file) {
+  var loadImages = function (chooser, callback) {
+    if (chooser.files) {
+      Array.from(chooser.files).forEach(function (file) {
         if (file.type.match('image')) {
           var reader = new FileReader();
 
@@ -50,6 +50,8 @@
           });
 
           reader.readAsDataURL(file);
+        } else {
+          chooser.value = '';
         }
       });
     }
@@ -59,7 +61,6 @@
    * Функция удаления изображений, добавленных на страницу
    */
   var removeImages = function () {
-    images = document.querySelectorAll('.ad-form__photo--upload');
     images.forEach(function (item) {
       item.parentElement.remove();
     });
@@ -67,11 +68,11 @@
   };
 
   var onAvatarChange = function (evt) {
-    loadImages(evt.target.files, loadAvatar);
+    loadImages(evt.target, loadAvatar);
   };
 
   var onPhotoChange = function (evt) {
-    loadImages(evt.target.files, loadPhoto);
+    loadImages(evt.target, loadPhoto);
   };
 
   var addImageListeners = function () {

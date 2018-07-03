@@ -193,6 +193,7 @@
     formReset.addEventListener('click', onClearButtonClick);
     form.addEventListener('invalid', onFormInvalid, true);
     form.addEventListener('submit', onFormSubmit);
+    window.image.addListeners();
   };
 
   /**
@@ -207,6 +208,7 @@
     timeoutSelect.removeEventListener('change', onTimeinOptionChange);
     formReset.removeEventListener('click', onClearButtonClick);
     form.removeEventListener('invalid', onFormInvalid, true);
+    window.image.removeListeners();
   };
 
   window.form = {

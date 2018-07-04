@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var PINS_NUM = 5;
+  var data = [];
+  var filteredData = [];
   var filter = document.querySelector('.map__filters');
   var typeSelect = filter.querySelector('#housing-type');
   var priceSelect = filter.querySelector('#housing-price');
@@ -8,8 +11,6 @@
   var guestsSelect = filter.querySelector('#housing-guests');
   var featuresFieldset = filter.querySelector('#housing-features');
   var filterElements = filter.querySelectorAll('input, select');
-  var data = [];
-  var filteredData = [];
 
   var priceRange = {
     low: {
@@ -25,9 +26,6 @@
       MAX: Infinity
     }
   };
-
-  var PINS_NUM = 5;
-
 
   /**
    * Функция фильтрации элементов для полей "тип", "кол-во комнат", "кол-во гостей"

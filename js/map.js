@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var activePage;
+  var map = document.querySelector('.map');
+  var mainPin = map.querySelector('.map__pin--main');
+
   var mainPinParams = {
     WIDTH: 65,
     HEIGHT: 84,
@@ -14,10 +18,6 @@
       MIN: 0
     }
   };
-
-  var activePage;
-  var map = document.querySelector('.map');
-  var mainPin = map.querySelector('.map__pin--main');
 
   /**
    * @typedef {Object} mainPinCoordinates

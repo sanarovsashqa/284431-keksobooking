@@ -1,14 +1,14 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500;
+
   /**
    * @enum {number}
    */
   var KeyCodes = {
     ESC: 27
   };
-
-  var DEBOUNCE_INTERVAL = 500;
 
   var callEscPress = function (evt, callback) {
     if (evt.keyCode === KeyCodes.ESC) {

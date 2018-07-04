@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
+  var activePin;
+  var pinTemplate = document.querySelector('#map-card-template').content.querySelector('.map__pin');
+
   var pinParams = {
     WIDTH: 50,
     HEIGHT: 70
   };
-
-  var activePin;
-  var pinTemplate = document.querySelector('#map-card-template').content.querySelector('.map__pin');
 
   /**
    * Функция приведения пина в активное состояние

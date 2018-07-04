@@ -1,6 +1,22 @@
 'use strict';
 
 (function () {
+  var invalidElements = [];
+  var form = document.querySelector('.ad-form');
+  var titleInput = form.querySelector('#title');
+  var addressInput = form.querySelector('#address');
+  var housingTypeSelect = form.querySelector('#type');
+  var priceInput = form.querySelector('#price');
+  var timeinSelect = form.querySelector('#timein');
+  var timeoutSelect = form.querySelector('#timeout');
+  var roomsSelect = form.querySelector('#room_number');
+  var capacitySelect = form.querySelector('#capacity');
+  var capacityOptions = capacitySelect.querySelectorAll('option');
+  var formReset = form.querySelector('.ad-form__reset');
+  var formHeader = form.querySelector('.ad-form-header');
+  var formElements = form.querySelectorAll('.ad-form__element');
+  var success = document.querySelector('.success');
+
   /**
    * @enum {number}
    */
@@ -22,22 +38,6 @@
     DISABLED: true,
     ENABLED: false
   };
-
-  var invalidElements = [];
-  var form = document.querySelector('.ad-form');
-  var titleInput = form.querySelector('#title');
-  var addressInput = form.querySelector('#address');
-  var housingTypeSelect = form.querySelector('#type');
-  var priceInput = form.querySelector('#price');
-  var timeinSelect = form.querySelector('#timein');
-  var timeoutSelect = form.querySelector('#timeout');
-  var roomsSelect = form.querySelector('#room_number');
-  var capacitySelect = form.querySelector('#capacity');
-  var capacityOptions = capacitySelect.querySelectorAll('option');
-  var formReset = form.querySelector('.ad-form__reset');
-  var formHeader = form.querySelector('.ad-form-header');
-  var formElements = form.querySelectorAll('.ad-form__element');
-  var success = document.querySelector('.success');
 
   /**
    * Функция изменения состояния элементов формы

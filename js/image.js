@@ -1,11 +1,6 @@
 'use strict';
 
 (function () {
-  var PhotoParams = {
-    WIDTH: '70px',
-    HEIGHT: '70px'
-  };
-
   var DEFAULT_AVATAR = 'img/muffin-grey.svg';
   var images = [];
   var avatarPreview = document.querySelector('.ad-form-header__preview > img');
@@ -14,6 +9,10 @@
   var photoChooser = document.querySelector('.ad-form__input');
   var photoContainer = document.querySelector('.ad-form__photo-container');
 
+  var PhotoParams = {
+    WIDTH: '70px',
+    HEIGHT: '70px'
+  };
 
   var loadAvatar = function (src) {
     avatarPreview.src = src;

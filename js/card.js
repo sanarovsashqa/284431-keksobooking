@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var activeCard;
+  var cardTemplate = document.querySelector('#map-card-template').content.querySelector('.map__card');
+  var map = document.querySelector('.map');
+
   var offerTypesTranslation = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -13,10 +17,6 @@
     HEIGHT: 40,
     ALT: 'Фотография жилья'
   };
-
-  var activeCard;
-  var cardTemplate = document.querySelector('#map-card-template').content.querySelector('.map__card');
-  var map = document.querySelector('.map');
 
   /**
    * Функция создания элемента 'Feauture'

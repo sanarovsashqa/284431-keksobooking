@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-
   var pinElements = [];
   var pins = document.querySelector('.map__pins');
   var fragment = document.createDocumentFragment();

@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var TIMEOUT = 3000;
   var message = document.createElement('div');
 
   /**
@@ -13,7 +14,7 @@
     document.body.appendChild(message);
     setTimeout(function () {
       document.body.removeChild(message);
-    }, 3000);
+    }, TIMEOUT);
   };
 
   window.createErrorMessage = createErrorMessage;
